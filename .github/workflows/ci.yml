@@ -1,0 +1,12 @@
+on: [push, pull_request]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        uses: actions/checkout@v2
+      - id: build
+        run: ./script/build.sh
+      - id: test
+        run: |
+          docker run --rm -v $PWD:/repo percygrunwald/docker-ci-base /repo/script/test.sh
