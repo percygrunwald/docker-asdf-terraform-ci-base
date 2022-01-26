@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Test to ensure that installation of all asdf plugins succeeds and all
+# necessary commands are available and work.
+
 set -e
 
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf
