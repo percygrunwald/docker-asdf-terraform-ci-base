@@ -1,5 +1,7 @@
 # docker-asdf-terraform-ci-base
 
+![build_and_test](https://github.com/percygrunwald/docker-asdf-terraform-ci-base/actions/workflows/build_and_test.yml/badge.svg)
+
 A minimal base image for use in Terraform/Terragrunt/Terratest CI pipelines using [asdf](http://asdf-vm.com/). The following items **can be installed** (all dependencies are met, but they are not installed, so you can control the versions):
 
 - [asdf](http://asdf-vm.com/)
