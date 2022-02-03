@@ -1,0 +1,13 @@
+on: [push, pull_request]
+env:
+  DOCKER_USERNAME: percygrunwald
+  IMAGE_NAME: percygrunwald/docker-asdf-terraform-ci-base
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        uses: actions/checkout@v2
+      - id: build-and-test
+        run: script/ci.sh
+

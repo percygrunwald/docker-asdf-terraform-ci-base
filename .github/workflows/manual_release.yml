@@ -1,0 +1,12 @@
+on: workflow_dispatch
+env:
+  DOCKER_USERNAME: percygrunwald
+  IMAGE_NAME: percygrunwald/docker-asdf-terraform-ci-base
+jobs:
+  manual_release:
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        uses: actions/checkout@v2
+      - id: build-and-test
+        run: script/ci.sh

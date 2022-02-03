@@ -44,19 +44,51 @@ We suggest using this image as the base for Terraform/Terragrunt/Terratest pipel
 
 The images are built and pushed by Github actions. All the code is in the `.github` directory.
 
+When do I want to build and upload an image:
+
+- When a new ubuntu image was released
+  - Scheduled
+  - Script with args
+    - Update Dockerfile
+    - Build
+    - Test
+    - Commit - need to set the name and email
+    - Tag
+    - Docker push
+  - Github actions
+    - Git push
+    - Release
+- Manually creating a release
+  - workflow dispatch
+  - Script with args
+    - Build
+    - Test
+    - Tag
+    - Docker push
+  - Github actions
+    - Git push
+    - Release
+- Every push
+  - push
+  - Script with args
+    - Build
+    - Test
 ### Testing the CI/CD pipeline locally
 
 You can test the CI/CD pipeline ([Github Actions](https://docs.github.com/en/actions)) locally using [nektos/act](https://github.com/nektos/act). Requires docker.
 
 `--reuse` reuses the containers for each workflow job, keeping all installed tools/dependencies. This is recommended for frequent runs since `act` [cannot make use of actions caching](https://github.com/nektos/act/issues/285#issuecomment-987550101), which means all tools/dependencies must be downloaded each time. If you ever want to start again from scratch (empty container), just run without `--reuse`.
 
-`DOCKER_PASSWORD` should be passed as a secret.
+```
+# Install act with go (see act docs for other installation options)
+go install github.com/nektos/act@latest
+```
+
+Run the push workflow, `DOCKER_PASSWORD` should be set to an access token and passed as a secret:
 
 ```
-# Install act with go (see docs for other installation options)
-go install github.com/nektos/act@latest
-
-# Run the CI/CD pipeline locally
 export DOCKER_PASSWORD=...
-act --reuse -s DOCKER_PASSWORD
+act push --reuse -s DOCKER_PASSWORD
+act workflow_dispatch --reuse -s DOCKER_PASSWORD
+act schedule --reuse -s DOCKER_PASSWORD
 ```

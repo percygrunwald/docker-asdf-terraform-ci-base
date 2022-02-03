@@ -1,0 +1,14 @@
+on:
+  schedule:
+    - cron: '0 0 * * *'
+env:
+  DOCKER_USERNAME: percygrunwald
+  IMAGE_NAME: percygrunwald/docker-asdf-terraform-ci-base
+jobs:
+  auto_release:
+    runs-on: ubuntu-latest
+    steps:
+      - id: checkout
+        uses: actions/checkout@v2
+      - id: build-and-test
+        run: script/ci.sh
