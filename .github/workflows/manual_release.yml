@@ -2,11 +2,22 @@ on: workflow_dispatch
 env:
   DOCKER_USERNAME: percygrunwald
   IMAGE_NAME: percygrunwald/docker-asdf-terraform-ci-base
+  GIT_AUTHOR_EMAIL: percy.grunwald@gmail.com
+  GIT_AUTHOR_NAME: Percy Grunwald
 jobs:
   manual_release:
     runs-on: ubuntu-latest
     steps:
       - id: checkout
         uses: actions/checkout@v2
-      - id: build-and-test
-        run: script/ci.sh
+      - id: build-test-git-tag-docker-push
+        run: script/ci.sh -pt
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - id: git-push
+        run: |
+          printf "Running git push...\n" >&2
+          git push
+          printf "Running git push tags...\n" >&2
+          git push --tags
+        if: github.actor != 'nektos/act'

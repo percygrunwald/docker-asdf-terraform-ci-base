@@ -4,6 +4,8 @@ on:
 env:
   DOCKER_USERNAME: percygrunwald
   IMAGE_NAME: percygrunwald/docker-asdf-terraform-ci-base
+  GIT_AUTHOR_EMAIL: percy.grunwald@gmail.com
+  GIT_AUTHOR_NAME: Percy Grunwald
 jobs:
   auto_release:
     runs-on: ubuntu-latest

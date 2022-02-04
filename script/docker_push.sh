@@ -3,10 +3,10 @@
 # Push image to Docker Hub
 #
 # Required env vars:
-#   IMAGE_NAME
-#   IMAGE_UNIQUE
-#   DOCKER_USERNAME
-#   DOCKER_PASSWORD
+#   - IMAGE_NAME
+#   - IMAGE_UNIQUE
+#   - DOCKER_USERNAME
+#   - DOCKER_PASSWORD
 
 set -e
 

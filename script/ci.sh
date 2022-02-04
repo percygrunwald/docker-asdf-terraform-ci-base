@@ -5,7 +5,13 @@
 # Hub.
 #
 # Required env vars:
-#   DOCKER_PASSWORD
+#   - DOCKER_PASSWORD
+#
+# Optional env vars:
+#   - IMAGE_NAME
+#   - GIT_AUTHOR_NAME
+#   - GIT_AUTHOR_EMAIL
+#   - DOCKER_USERNAME
 
 UPDATE_DOCKERFILE=n
 GIT_COMMIT=n
@@ -30,6 +36,8 @@ SCRIPT_DIR=$(dirname "$0")
 # Update digest
 CURRENT_DIGEST=$(grep "^FROM" Dockerfile | cut -d'@' -f2-)
 if [ "${UPDATE_DOCKERFILE}" == y ]; then
+  printf "Updating Dockerfile if necessary...\n" >&2
+
   LATEST_DIGEST=$(${SCRIPT_DIR}/get_latest_digest.sh)
 
   printf "Latest digest:\t'%s'\n" "${LATEST_DIGEST}" >&2
@@ -46,28 +54,36 @@ if [ "${UPDATE_DOCKERFILE}" == y ]; then
 fi
 
 # Build
+printf "Building docker image...\n" >&2
 DATETIME=$(date -u +"%Y-%m-%d-%H%M%S")
 export IMAGE_NAME=${IMAGE_NAME:-percygrunwald/docker-asdf-terraform-ci-base}
 export IMAGE_UNIQUE="${IMAGE_NAME}:${DATETIME}"
 ${SCRIPT_DIR}/docker_build.sh
 
 # Test
+printf "Testing docker image...\n" >&2
 docker run --rm -v $PWD:/repo ${IMAGE_UNIQUE} /repo/script/test.sh
 
 # Commit and tag
 export DATETIME
 export CURRENT_DIGEST_SHORT="${CURRENT_DIGEST:0:16}"
 export COMMIT_MESSAGE="Updates Dockerfile to ubuntu@${CURRENT_DIGEST_SHORT}"
-export COMMIT_AUTHOR=${COMMIT_AUTHOR:-"Percy Grunwald <percy.grunwald@gmail.com>"}
+GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-"Percy Grunwald"}
+GIT_AUTHOR_EMAIL=${GIT_AUTHOR_EMAIL:-"percy.grunwald@gmail.com"}
+git config --global user.email "${GIT_AUTHOR_EMAIL}"
+git config --global user.name "${GIT_AUTHOR_NAME}"
 if [ "${GIT_COMMIT}" == y ]; then
+  printf "Running git commit...\n" >&2
   ${SCRIPT_DIR}/git_commit.sh
 fi
 if [ "${GIT_TAG}" == y ]; then
+  printf "Applying git tags...\n" >&2
   ${SCRIPT_DIR}/git_tag.sh
 fi
 
 # Push
 if [ "${DOCKER_PUSH}" == y ]; then
+  printf "Running docker push...\n" >&2
   export IMAGE_NAME
   export IMAGE_UNIQUE
   export DOCKER_USERNAME=${DOCKER_USERNAME:-percygrunwald}

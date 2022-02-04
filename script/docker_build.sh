@@ -3,8 +3,8 @@
 # Build the image and return the image name with tag
 #
 # Required env vars:
-#   IMAGE_NAME
-#   IMAGE_UNIQUE
+#   - IMAGE_NAME
+#   - IMAGE_UNIQUE
 
 set -e
 
