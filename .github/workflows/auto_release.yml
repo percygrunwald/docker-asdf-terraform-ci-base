@@ -7,10 +7,33 @@ env:
   GIT_AUTHOR_EMAIL: percy.grunwald@gmail.com
   GIT_AUTHOR_NAME: Percy Grunwald
 jobs:
-  auto_release:
+  manual_release:
     runs-on: ubuntu-latest
     steps:
       - id: checkout
         uses: actions/checkout@v2
-      - id: build-and-test
-        run: script/ci.sh
+      - id: ci-script
+        run: |
+          # -c = git commit, -p = docker push, -t = git tag,
+          # -u = update dockerfile
+          script/ci.sh -cptu
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - id: print-release-tag
+        run: |
+          printf "${RELEASE_TAG}\n"
+        env:
+          RELEASE_TAG: ${{ steps.build-test-git-tag-docker-push.outputs.release-tag }}
+      - id: git-push
+        run: |
+          printf "Running git push...\n" >&2
+          git push
+          printf "Running git push tags...\n" >&2
+          git push --tags
+        if: github.actor != 'nektos/act'
+      - id: git-release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.build-test-git-tag-docker-push.outputs.release-tag }}
+          tag_name: ${{ steps.build-test-git-tag-docker-push.outputs.release-tag }}
+        if: github.actor != 'nektos/act'

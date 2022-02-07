@@ -10,7 +10,7 @@ jobs:
     steps:
       - id: checkout
         uses: actions/checkout@v2
-      - id: build-test-git-tag-docker-push
+      - id: ci-script
         run: |
           # -p = docker push, -t = git tag
           script/ci.sh -pt
@@ -20,7 +20,7 @@ jobs:
         run: |
           printf "${RELEASE_TAG}\n"
         env:
-          RELEASE_TAG: ${{ steps.build-test-git-tag-docker-push.outputs.release-tag }}
+          RELEASE_TAG: ${{ steps.ci-script.outputs.release-tag }}
       - id: git-push
         run: |
           printf "Running git push...\n" >&2
@@ -31,6 +31,6 @@ jobs:
       - id: git-release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ steps.build-test-git-tag-docker-push.outputs.release-tag }}
-          tag_name: ${{ steps.build-test-git-tag-docker-push.outputs.release-tag }}
+          name: ${{ steps.ci-script.outputs.release-tag }}
+          tag_name: ${{ steps.ci-script.outputs.release-tag }}
         if: github.actor != 'nektos/act'

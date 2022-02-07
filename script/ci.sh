@@ -49,7 +49,7 @@ if [ "${UPDATE_DOCKERFILE}" == y ]; then
   fi
 
   printf "Digests are not equal, updating Dockerfile...\n" >&2
-  sed -e "s/${CURRENT_DIGEST}/${LATEST_DIGEST}/" -i '' ./Dockerfile
+  sed -e "s/${CURRENT_DIGEST}/${LATEST_DIGEST}/" -i ./Dockerfile
   CURRENT_DIGEST=${LATEST_DIGEST}
 fi
 
