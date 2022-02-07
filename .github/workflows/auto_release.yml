@@ -1,6 +1,6 @@
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 * * * *'
 env:
   DOCKER_USERNAME: percygrunwald
   IMAGE_NAME: percygrunwald/docker-asdf-terraform-ci-base
