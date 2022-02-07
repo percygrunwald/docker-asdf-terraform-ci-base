@@ -9,5 +9,7 @@ jobs:
       - id: checkout
         uses: actions/checkout@v2
       - id: build-and-test
-        run: script/ci.sh
+        run: |
+          # No args just builds and tests
+          script/ci.sh
 

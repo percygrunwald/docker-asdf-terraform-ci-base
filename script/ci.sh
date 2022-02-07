@@ -56,8 +56,9 @@ fi
 # Build
 printf "Building docker image...\n" >&2
 DATETIME=$(date -u +"%Y-%m-%d-%H%M%S")
+RELEASE_TAG="v${DATETIME}"
 export IMAGE_NAME=${IMAGE_NAME:-percygrunwald/docker-asdf-terraform-ci-base}
-export IMAGE_UNIQUE="${IMAGE_NAME}:${DATETIME}"
+export IMAGE_UNIQUE="${IMAGE_NAME}:${RELEASE_TAG}"
 ${SCRIPT_DIR}/docker_build.sh
 
 # Test
@@ -65,7 +66,7 @@ printf "Testing docker image...\n" >&2
 docker run --rm -v $PWD:/repo ${IMAGE_UNIQUE} /repo/script/test.sh
 
 # Commit and tag
-export DATETIME
+export RELEASE_TAG
 export CURRENT_DIGEST_SHORT="${CURRENT_DIGEST:0:16}"
 export COMMIT_MESSAGE="Updates Dockerfile to ubuntu@${CURRENT_DIGEST_SHORT}"
 GIT_AUTHOR_NAME=${GIT_AUTHOR_NAME:-"Percy Grunwald"}
@@ -90,3 +91,5 @@ if [ "${DOCKER_PUSH}" == y ]; then
   export DOCKER_PASSWORD
   ${SCRIPT_DIR}/docker_push.sh
 fi
+
+printf "::set-output name=release-tag::${RELEASE_TAG}\n"

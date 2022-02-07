@@ -4,8 +4,7 @@
 #
 # Required env vars:
 #   - COMMIT_MESSAGE
-#   - CURRENT_DIGEST_SHORT
-#   - DATETIME
+#   - GIT_AUTHOR_NAME
 #
 # Other dependencies
 #   - git config user.email and user.name set
