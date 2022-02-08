@@ -24,16 +24,17 @@ jobs:
           printf "${RELEASE_TAG}\n"
         env:
           RELEASE_TAG: ${{ steps.ci-script.outputs.release-tag }}
+        if: steps.ci-script.outputs.release-tag != ''
       - id: git-push
         run: |
           printf "Running git push...\n" >&2
           git push
           printf "Running git push tags...\n" >&2
           git push --tags
-        if: github.actor != 'nektos/act'
+        if: github.actor != 'nektos/act' && steps.ci-script.outputs.release-tag != ''
       - id: git-release
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ steps.ci-script.outputs.release-tag }}
           tag_name: ${{ steps.ci-script.outputs.release-tag }}
-        if: github.actor != 'nektos/act'
+        if: github.actor != 'nektos/act' && steps.ci-script.outputs.release-tag != ''
