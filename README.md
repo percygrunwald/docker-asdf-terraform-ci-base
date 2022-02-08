@@ -2,7 +2,7 @@
 
 ![build_and_test](https://github.com/percygrunwald/docker-asdf-terraform-ci-base/actions/workflows/build_and_test.yml/badge.svg)
 
-A minimal base image for use in Terraform/Terragrunt/Terratest CI pipelines using [asdf](http://asdf-vm.com/). The following items **can be installed** (all dependencies are met, but they are not installed, so you can control the versions):
+A minimal Docker image based on [Ubuntu 20.04](https://hub.docker.com/_/ubuntu?tab=tags&page=1&name=20.04) for use in Terraform/Terragrunt/Terratest CI pipelines. The image contains alls dependencies for installing Terraform and related tools using [asdf](http://asdf-vm.com/). The following items *can* be installed (all dependencies are met, but they are not installed, so you can control the versions):
 
 - [asdf](http://asdf-vm.com/)
 - [checkov](https://github.com/bridgecrewio/checkov) (via `pip`, for use with `pre-commit`)
@@ -23,58 +23,27 @@ Images are built in Github Actions and hosted at [hub.docker.com/r/percygrunwald
 docker pull percygrunwald/docker-asdf-terraform-ci-base
 ```
 
-Images are tagged with the following tags:
+### Docker tags
 
-- `git-$COMMIT_HASH` - the commit hash of the commit that built the image
-- `YYYY-MM-DD-HHMMSS` - the date and time of the build
+Each image has the following tags, which allow you to specify a specific release:
+
+- `vYYYY-MM-DD-HHMMSS` - the main release tag, composed of the date/time of the build
+- `git-$COMMIT_HASH` - the commit hash of the commit in this repository from which the image was built
+- `ubuntu-$DOCKER_DIGEST` - the short digest of the underlying [Ubuntu docker image](https://hub.docker.com/_/ubuntu?tab=tags&page=1)
 
 ### In CI/CD pipelines
 
-We suggest using this image as the base for Terraform/Terragrunt/Terratest pipelines, with steps similar to below:
+A suggested workflow
 
-- Use this image as a base
-- Attempt to restore `~/.asdf` from cache
-- Install [asdf](http://asdf-vm.com/) and add to the `$PATH`
-- Install all tools in the `.tool-versions` file
-- Install any addition dependencies with `pip` and `golang install`
-- Formatting/linting/security checks with `pre-commit`
-- CI/CD tasks with `terragrunt`, `terraform` and/or `terratest`
-- Cache the `~/.asdf` directory based on the hash of the `.tool-versions` file(s)
-- Cache the  `~/.cache/pre-commit` directory based on the hash of the `.pre-commit-config.yaml` file
+- Use `percygrunwald/docker-asdf-terraform-ci-base` as the base image for the CI pipeline
+- Install `asdf` with `git clone` and run `asdf` install to install all tools (`terraform`, `terragrunt`, `golang`, etc.)
+- Run CI tasks (lint, test, `terraform plan`, etc.)
+- Cache `~/.asdf` directory for future runs (hash based on `.tool-versions` file)
 
 ## CI/CD for this repo
 
-The images are built and pushed by Github actions. All the code is in the `.github` directory.
+This repo is a "live" repo. It "follows" the [`ubuntu` repo on Docker Hub](https://hub.docker.com/_/ubuntu) and when a new version of the `20.04` (Focal) base image is released, Github Actions will update the `Dockerfile`, build and test the resulting image, commit the changes, push the new image [to Docker Hub](https://hub.docker.com/r/percygrunwald/docker-asdf-terraform-ci-base) and create a Github release. Please see the `.github` for full details.
 
-When do I want to build and upload an image:
-
-- When a new ubuntu image was released
-  - Scheduled
-  - Script with args
-    - Update Dockerfile
-    - Build
-    - Test
-    - Commit - need to set the name and email
-    - Tag
-    - Docker push
-  - Github actions
-    - Git push
-    - Release
-- Manually creating a release
-  - workflow dispatch
-  - Script with args
-    - Build
-    - Test
-    - Tag
-    - Docker push
-  - Github actions
-    - Git push
-    - Release
-- Every push
-  - push
-  - Script with args
-    - Build
-    - Test
 ### Testing the CI/CD pipeline locally
 
 You can test the CI/CD pipeline ([Github Actions](https://docs.github.com/en/actions)) locally using [nektos/act](https://github.com/nektos/act). Requires docker.
