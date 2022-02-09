@@ -26,7 +26,7 @@ jobs:
           printf "Running git push...\n" >&2
           git push
           printf "Running git push tags...\n" >&2
-          git push --tags
+          git push --tags --force
         if: github.actor != 'nektos/act'
       - id: git-release
         uses: softprops/action-gh-release@v1

@@ -58,8 +58,9 @@ go install github.com/nektos/act@latest
 Run the push workflow, `DOCKER_PASSWORD` should be set to an access token and passed as a secret:
 
 ```
+act push --reuse
+
 export DOCKER_PASSWORD=...
-act push --reuse -s DOCKER_PASSWORD
 act workflow_dispatch --reuse -s DOCKER_PASSWORD
 act schedule --reuse -s DOCKER_PASSWORD
 ```

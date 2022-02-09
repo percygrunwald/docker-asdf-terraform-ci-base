@@ -3,6 +3,7 @@
 # Tag the latest Dockerfile commit
 #
 # Required env vars:
+#   - COMMIT_HASH
 #   - CURRENT_DIGEST_SHORT
 #   - RELEASE_TAG
 #
@@ -13,10 +14,8 @@ set -e
 
 UBUNTU_TAG="ubuntu-${CURRENT_DIGEST_SHORT//:/-}"
 
-if [ ! $(git tag -l "${RELEASE_TAG}") ]; then
-  git tag -a -m "${RELEASE_TAG} - ${UBUNTU_TAG}" "${RELEASE_TAG}"
-fi
+git tag -a -m "${RELEASE_TAG} - ${UBUNTU_TAG}" "${RELEASE_TAG}" "${COMMIT_HASH}"
 
-if [ ! $(git tag -l "${UBUNTU_TAG}") ]; then
-  git tag -a -m "${UBUNTU_TAG} - ${RELEASE_TAG}" "${UBUNTU_TAG}"
-fi
+# Use -f since this tag will move if there is a new build based off the same
+# version of the base image (e.g. update deps)
+git tag -a -f -m "${UBUNTU_TAG} - ${RELEASE_TAG}" "${UBUNTU_TAG}" "${COMMIT_HASH}"

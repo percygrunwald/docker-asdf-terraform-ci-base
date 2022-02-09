@@ -77,6 +77,7 @@ if [ "${GIT_COMMIT}" == y ]; then
   printf "Running git commit...\n" >&2
   ${SCRIPT_DIR}/git_commit.sh
 fi
+export COMMIT_HASH=$(git rev-parse --short HEAD)
 if [ "${GIT_TAG}" == y ]; then
   printf "Applying git tags...\n" >&2
   ${SCRIPT_DIR}/git_tag.sh

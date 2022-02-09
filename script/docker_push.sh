@@ -3,6 +3,7 @@
 # Push image to Docker Hub
 #
 # Required env vars:
+#   - COMMIT_HASH
 #   - IMAGE_NAME
 #   - IMAGE_UNIQUE
 #   - DOCKER_USERNAME
@@ -10,7 +11,6 @@
 
 set -e
 
-COMMIT_HASH=$(git rev-parse --short HEAD)
 DOCKER_USERNAME=${DOCKER_USERNAME:-percygrunwald}
 
 docker image tag ${IMAGE_UNIQUE} ${IMAGE_NAME}:latest

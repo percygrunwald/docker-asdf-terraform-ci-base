@@ -16,7 +16,7 @@ ENV TERRAGRUNT_DEPS=""
 ENV TFLINT_DEPS=""
 
 # https://pre-commit.com/#install
-ENV PRE_COMMIT_DEPS="python3 python3-pip"
+ENV PRE_COMMIT_DEPS="python3 python3-pip python3-venv"
 
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
