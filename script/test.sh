@@ -11,10 +11,10 @@ export PATH="${PATH}:${HOME}/.asdf/bin:${HOME}/.asdf/shims"
 asdf --version
 
 cat << 'EOF' > ~/.tool-versions
-golang 1.17.6
-terraform 1.1.3
-terragrunt 0.35.20
-tflint 0.34.1
+golang 1.20.1
+terraform 1.3.9
+terragrunt 0.44.0
+tflint 0.45.0
 EOF
 
 while read PLUGIN VERSION; do
