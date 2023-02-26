@@ -1,4 +1,4 @@
-FROM ubuntu@sha256:8eb87f3d6c9f2feee114ff0eff93ea9dfd20b294df0a0353bd6a4abf403336fe
+FROM ubuntu@sha256:bffb6799d706144f263f4b91e1226745ffb5643ea0ea89c2f709208e8d70c999
 
 # https://asdf-vm.com/guide/getting-started.html#_1-install-dependencies
 ENV ASDF_DEPS="git curl"
